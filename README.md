@@ -1,2 +1,2 @@
 # expo-calc-app
-early build
+early build 
