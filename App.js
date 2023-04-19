@@ -111,8 +111,8 @@ class App extends React.Component {
 
 
   render() {
+    const img = require("./gradient.jpg")
     if (Dimensions.get('screen').height > Dimensions.get('screen').width) {
-      const img = require("./assets/gradientland.jpg")
       return (
         <ImageBackground source={img} style={styles.container}>
         <StatusBar style="auto" />
@@ -131,7 +131,6 @@ class App extends React.Component {
     </ImageBackground>);
     }
     else {
-      const img = require("./assets/gradientland.jpg")
       return (<ImageBackground source={img} style={styles.container}>
         <StatusBar style="auto" />
         <View style={stylesland.bar1}><Text style={styles.bar1Text}>{this.state.equation}</Text></View>
