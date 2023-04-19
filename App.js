@@ -23,129 +23,119 @@ class App extends React.Component {
   };
 
   addToEquation = (val) => {
-    deletelast = () => {          
-      this.setState({
-        equation: this.state.equation.substring(0,this.state.equation.length-1)
-      })
-    }
-    const signs = ['+','-','/','*','n','s','w','t','.','(',')']
-    const longersigns = ['n','s','w','t']
-    if (val == '=') {
-      if (!signs.includes(this.state.equation[this.state.equation.length-1])){
-        this.setState({
-          evaled: eval(this.state.equation)
-        })
-      }
-    }
-    else if (val == 'C') {
-      this.setState({
-        equation: '',
-        evaled: '0'
-      })
-    }
-    else if (val == 'sqrt'){
-      if (this.state.evaled != ''){
-        if (signs.includes(this.state.equation[this.state.equation.length-1])){
-          deletelast()
-        }
-        this.setState({
-          evaled: Math.sqrt(parseFloat(eval(this.state.equation)))
-        })
-      }
-    }    
-    else if (val == 'pow'){
-      if (this.state.evaled != ''){
-        if (signs.includes(this.state.equation[this.state.equation.length-1])){
-          deletelast()
-        }
-        this.setState({
-          evaled: Math.pow(parseFloat(eval(this.state.equation)),2)
-        })
-      }
-    }    
-    else if (val == 'sin'){
-      if (this.state.evaled != ''){
-        if (signs.includes(this.state.equation[this.state.equation.length-1])){
-          deletelast()
-        }
-        this.setState({
-          evaled: Math.sin(parseFloat(eval(this.state.equation)))
-        })
-      }
-    }    
-    else if (val == 'cos'){
-      if (this.state.evaled != ''){
-        if (signs.includes(this.state.equation[this.state.equation.length-1])){
-          deletelast()
-        }
-        this.setState({
-          evaled: Math.cos(parseFloat(eval(this.state.equation)))
-        })
-      }
-    }
-    else if (val == 'Del'){
-      if (longersigns.includes(this.state.equation[this.state.equation.length-1])){
-        if (this.state.equation[this.state.equation.length-1] == 't'){
-          this.setState({
-            equation: this.state.equation.substring(0,this.state.equation.length-4)
-          })
-        }
-        else {
-          this.setState({
-            equation: this.state.equation.substring(0,this.state.equation.length-3)
-          })
-        }
-      }
-      else {
+    checklast = () => {   
+      if (signs.includes(this.state.equation[this.state.equation.length-1])){
         this.setState({
           equation: this.state.equation.substring(0,this.state.equation.length-1)
         })
       }
     }
-    else if (!(signs.includes(val[val.length-1]) && (signs.includes(this.state.equation[this.state.equation.length-1])))){
-      this.setState({
-        equation: this.state.equation + val,
-      })
+    const signs = ['+','-','/','*','n','s','w','t','.','(',')']
+    const longersigns = ['n','s','w','t']
+    switch (val){
+      case '=':
+        if (!signs.includes(this.state.equation[this.state.equation.length-1])){
+          this.setState({
+            evaled: eval(this.state.equation)
+          })
+        }
+        break
+
+      case 'C':
+        this.setState({
+          equation: '',
+          evaled: '0'
+        })
+        break
+
+      case 'sqrt':
+        if (this.state.equation){
+          checklast()
+          this.setState({
+            evaled: Math.sqrt(parseFloat(eval(this.state.equation)))
+          })
+        }
+        break
+
+      case 'pow':
+        if (this.state.equation){
+          checklast()
+          this.setState({
+            evaled: Math.pow(parseFloat(eval(this.state.equation)),2)
+          })
+        }
+        break
+
+      case 'sin':
+        if (this.state.equation){
+          checklast()
+          this.setState({
+            evaled: Math.sin(parseFloat(eval(this.state.equation)))
+          })
+        }
+        break
+
+      case 'cos':
+        if (this.state.equation){
+          checklast()
+          this.setState({
+            evaled: Math.cos(parseFloat(eval(this.state.equation)))
+          })
+        }
+        break
+
+      case 'Del':
+        if (longersigns.includes(this.state.equation[this.state.equation.length-1])){
+          if (this.state.equation[this.state.equation.length-1] == 't'){
+            this.setState({
+              equation: this.state.equation.substring(0,this.state.equation.length-4)
+            })
+          }
+          else {
+            this.setState({
+              equation: this.state.equation.substring(0,this.state.equation.length-3)
+            })
+          }
+        }
+        else {
+          this.setState({
+            equation: this.state.equation.substring(0,this.state.equation.length-1)
+          })
+        }
+        break
+
+      default:
+        if (!(signs.includes(val[val.length-1]) && (signs.includes(this.state.equation[this.state.equation.length-1])))){
+          this.setState({
+            equation: this.state.equation + val,
+          })
+        }
     }
   };
 
 
   render() {
     const img = require("./gradient.jpg")
+    let buttons = []
+    let styless = [styles.bar1, styles]
     if (Dimensions.get('screen').height > Dimensions.get('screen').width) {
-      return (
-        <ImageBackground source={img} style={styles.container}>
-        <StatusBar style="auto" />
-        <View style={styles.bar1}><Text style={styles.bar1Text}>{this.state.equation}</Text></View>
-        <View style={styles.bar2}><Text style={styles.bar2Text}>{this.state.evaled}</Text></View>
-          {
-            ['C','Del',
-            '1','2','3','+',
-            '4','5','6','-',
-            '7','8','9','*',
-            '0','.','=','/'].map((element) => {
-              return <Item styles={styles} val={element} key={element} addToEquation={this.addToEquation} />
-            })
-          }
-    
-    </ImageBackground>);
+      buttons = ['C','Del','1','2','3','+','4','5','6','-','7','8','9','*','0','.','=','/']
     }
     else {
-      return (<ImageBackground source={img} style={styles.container}>
-        <StatusBar style="auto" />
-        <View style={stylesland.bar1}><Text style={styles.bar1Text}>{this.state.equation}</Text></View>
-        <View style={styles.bar2}><Text style={styles.bar2Text}>{this.state.evaled}</Text></View>
-          {
-            ['1','2','3','Del','sqrt',
-            '4','5','6','C','pow',
-            '7','8','9','-','+','sin',
-            '0','.','=','/','*','cos'].map((element) => {
-              return <Item styles={stylesland} val={element} key={element} addToEquation={this.addToEquation} />
-            })
-            
-          }
-      </ImageBackground>);
+      styless = [stylesland.bar1, stylesland]
+      buttons = ['1','2','3','Del','sqrt','4','5','6','C','pow','7','8','9','-','+','sin','0','.','=','/','*','cos']
     }
+    return (
+    <ImageBackground source={img} style={styles.container}>
+      <StatusBar style="auto" />
+      <View style={styless[0]}><Text style={styles.bar1Text}>{this.state.equation}</Text></View>
+      <View style={styles.bar2}><Text style={styles.bar2Text}>{this.state.evaled}</Text></View>
+        {
+          buttons.map((element) => {
+            return <Item styles={styless[1]} val={element} key={element} addToEquation={this.addToEquation} />
+          })
+        }
+    </ImageBackground>);
   }
 }
 
